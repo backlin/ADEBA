@@ -1,5 +1,14 @@
 Adaptive density estimation by Bayesian averaging
 =====
-The original article describing the ADEBA method will be submitted to a scientific journal in the near future.
-At that time, ready-to-use implementations for MATLAB and R will be posted in this repository,
-together with the code required to perform and plot the simulations of the paper.
+This repo contains an R implementation of the ADEBA density estimation method
+and a benchmark study comparing it to a number of other methods.
+
+More details on ADEBA and a reference to the original article will be posted here
+once it has been accepted by a scientific journal (at the moment it is in submission).
+
+Installation
+------------
+On Linux/Unix/Mac, run `R/install.sh` to automatically build the package locally and
+install it.
+
+The package will be available on CRAN soon, currently under review.
