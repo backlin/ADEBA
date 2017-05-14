@@ -42,6 +42,7 @@ NULL
 #'   }
 #' @author Christofer \enc{Bäcklin}{Backlin}
 #' @importFrom pdist pdist
+#' @importFrom stats predict complete.cases prcomp dist
 #' @export
 make.adeba <- function(data, range=c(Inf, Inf), alpha=NULL, beta=0.5, pilot,
                        transform=TRUE, na.rm=FALSE, parallel=FALSE){
@@ -170,6 +171,7 @@ iterate <- function(object, ...){
 #' @param fine Fine search grid resolution.
 #' @return A data frame with values for alpha, beta, and the log posterior.
 #' @author Christofer \enc{Bäcklin}{Backlin}
+#' @importFrom stats dnorm
 #' @noRd
 get_posterior <- function(object, alpha, beta=0.5, rough=11, fine=41){
     k <- dimension(object)

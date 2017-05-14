@@ -38,8 +38,9 @@ adeba <- function(data, adaptive=TRUE, beta=0.5, parallel, na.rm=FALSE, ...){
     f
 }
 
-#' Sample from ADEBA estimate
+#' ADEBA estimates
 #'
+#' Density, distribution, and random generation for ADEBA estimates.
 #' Works just like \code{\link{rnorm}}, \code{\link{runif}}, etc.
 #'
 #' @param n Number of examples to sample.
@@ -52,6 +53,7 @@ adeba <- function(data, adaptive=TRUE, beta=0.5, parallel, na.rm=FALSE, ...){
 #' lines(f, lwd=3)
 #' rug(faithful$eruptions)
 #' @author Christofer \enc{Bäcklin}{Backlin}
+#' @importFrom stats rnorm
 #' @export
 radeba <- function(n, object){
     i <- sample(nrow(object$data), n, replace=TRUE)
@@ -63,9 +65,17 @@ radeba <- function(n, object){
     object$retransform(x)
 }
 
+#' @param x,q Vector of quantiles.
+#' @rdname radeba
+#' @export
 dadeba <- function(x, object){
     predict(object, x)
 }
+#' @param lower.tail Logical; If \code{TRUE} (default), probabilities are
+#'   \eqn{P[X \le x]}, otherwise, \eqn{P[X > x]}.
+#' @rdname radeba
+#' @importFrom stats pnorm
+#' @export
 padeba <- function(q, object, lower.tail=TRUE){
     stopifnot(dimension(object) == 1)
     myq <- if(is.vector(q)) matrix(q) else q

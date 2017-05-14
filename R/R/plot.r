@@ -1,5 +1,6 @@
 #' Plot density estimate
 #' 
+#' @method plot adeba
 #' @param x Density estimate.
 #' @param y Ignored, kept for S3 consistency.
 #' @param type What type of plot to draw.
@@ -9,6 +10,7 @@
 #' @param add Whether to start a new plot (\code{FALSE}) or add to an existing
 #'   (\code{TRUE}).
 #' @author Christofer \enc{Bäcklin}{Backlin}
+#' @importFrom graphics lines plot rug
 #' @export
 plot.adeba <- function(x, y, type=c("estimate", "data", "both"), ..., add=FALSE){
     if(!is.rendered(x)){
@@ -41,6 +43,7 @@ plot.adeba <- function(x, y, type=c("estimate", "data", "both"), ..., add=FALSE)
     }
 }
 
+#' @method lines adeba
 #' @rdname plot.adeba
 #' @export
 lines.adeba <- function(x, ...){
@@ -52,7 +55,9 @@ lines.adeba <- function(x, ...){
     lines(x = x$grid[[1]], y = x$posterior, ...)
 }
 
+#' @method points adeba
 #' @rdname plot.adeba
+#' @importFrom graphics rug
 #' @export
 points.adeba <- function(x, ...){
     if(!is.rendered(x)){
@@ -111,7 +116,8 @@ plot_beta <- function(x, ...){
 #' @usage plot3d(x, ...)
 NULL
 
-#' @importFrom rgl open3d surface3d decorate3d
+#' @method plot3d adeba
+#' @importFrom rgl plot3d open3d surface3d decorate3d
 #' @rdname plot.adeba
 #' @export
 plot3d.adeba <- function(x, ...){
@@ -133,7 +139,9 @@ plot3d.adeba <- function(x, ...){
     }
 }
 
+#' @method contour adeba
 #' @rdname plot.adeba
+#' @importFrom graphics contour
 #' @export
 contour.adeba <- function(x, ...){
     if(!is.rendered(x)){

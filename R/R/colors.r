@@ -23,6 +23,7 @@ blend <- function(a, b, mode=c("screen", "multiply")){
 #' @author Christofer \enc{Bäcklin}{Backlin}
 #' @seealso blend, mono2hex
 #' @importFrom abind abind
+#' @importFrom grDevices colorRampPalette col2rgb
 #' @export
 mono2png <- function(x, pal=c("#ff9933", "#ffff66"), alpha=TRUE){
     pal <- colorRampPalette(pal)(100)
