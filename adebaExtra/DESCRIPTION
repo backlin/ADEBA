@@ -1,0 +1,21 @@
+Encoding: UTF-8
+Package: adebaExtra
+Type: Package
+Title: Extra functionality for the adeba density estimation package
+Version: 1.0.1
+Date: 2017-07-02  
+Author: Christofer Backlin, Mats Gustafsson
+Maintainer: Christofer Backlin <adeba@christofer.backlin.se>
+Description: Support functions for the ADEBA package for density estimation.
+    These include plotting with the ggplot2 and rgl packages.
+Depends:
+    adeba
+Imports:
+    abind,
+    grDevices,
+    ggplot2,
+    png,
+    rgl
+License: GPL (>=2)
+LazyLoad: yes
+RoxygenNote: 6.0.1

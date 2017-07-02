@@ -6,9 +6,18 @@ and a benchmark study comparing it to a number of other methods.
 More details on ADEBA and a reference to the original article will be posted here
 once it has been accepted by a scientific journal (at the moment it is in submission).
 
-Installation
-------------
-On Linux/Unix/Mac, run `R/install.sh` to automatically build the package locally and
-install it.
+## Installation
+Latest release version:
 
-The package will be available on CRAN soon, currently under review.
+```
+R> install.packages("CRAN")
+```
+
+Latest dev version (currently the same):
+
+```
+library(devtools)
+install_github("backlin/ADEBA/adeba")
+```
+
+Some extra plot functionality is provided in the support package [`adebaExtra`](./adebaExtra).
