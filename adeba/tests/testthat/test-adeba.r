@@ -38,9 +38,10 @@ test_that("Posterior calculation", {
     expect_true(all(c("alpha", "beta", "log.posterior") %in% names(parameters)))
 
     parameters <- normalize_posterior(list(parameters))
-    expect_true(sum(parameters$posterior) == 1)
-
-    expect_equal(parameters, obj1$parameters)
+    expect_equal(sum(parameters$posterior), 1, tolerance=1e-3)
+    expect_equal(parameters, obj1$parameters, tolerance=1e-3)
+    # The tolerance is deliberately set high since we have no idea what CPU
+    # might run the code.
 })
 
 test_that("Cumulative distribution function", {
@@ -51,24 +52,5 @@ test_that("Cumulative distribution function", {
     cdq <- cumsum(dq)/sum(dq)
     pq <- padeba(q, object = den)
     expect_true(all(abs(pq - cdq) < .01))
-    #plot(q, pq, type="l")
-    #lines(q, cdq, col="red")
-    #plot(q, cdq - pq, type="l")
 })
 
-# library(ggplot2)
-# obj1 <- adeba(x, adaptive=FALSE, beta=0:4/2)
-# obj1$pilot <- predict(obj1)
-# p <- lapply(obj1$beta, function(b) adeba:::get_posterior(obj1, beta=b))
-# p <- do.call(rbind, p)
-# ggplot(p, aes(x = alpha, y = log.posterior, colour=factor(beta))) +
-#     geom_line()
-# 
-# obj1 <- iterate(obj1)
-# 
-#     obj2 <- list(data = matrix(x),
-#                  distance = as.matrix(dist(x)),
-#                  parallel = FALSE,
-#                  beta = 0:4/2,
-#                  pilot = rep(1, 20))
-#     parameters <- lapply(obj2$beta, function(b) adeba:::get_posterior(obj2, beta=b))

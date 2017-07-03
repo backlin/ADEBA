@@ -21,3 +21,4 @@ install_github("backlin/ADEBA/adeba")
 ```
 
 Some extra plot functionality is provided in the support package [`adebaExtra`](./adebaExtra).
+

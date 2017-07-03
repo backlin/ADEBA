@@ -7,8 +7,9 @@ using namespace Rcpp;
 //' @param x A numeric matrix.
 //' @return A logical vector containing \code{TRUE} if all elements of a column
 //'   are identical.
+//' @noRd
 // [[Rcpp::export]]
-LogicalVector find_constants(NumericMatrix x) {
+LogicalVector adeba_find_constants(NumericMatrix x) {
     int i;
     int n = x.nrow();
     int p = x.ncol();
@@ -26,8 +27,9 @@ LogicalVector find_constants(NumericMatrix x) {
 //' @param x A numeric vector with no missing values.
 //' @return A logical that is \code{TRUE} if all elements were identical,
 //'   otherwise \code{FALSE}.
+//' @noRd
 // [[Rcpp::export]]
-LogicalVector is_constant(NumericVector x) {
+LogicalVector adeba_is_constant(NumericVector x) {
     for(int i = 1; i < x.size(); i++)
         if(x[i] != x[0]) return false;
     return true;
