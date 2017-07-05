@@ -7,8 +7,8 @@
 #' @return A logical vector containing \code{TRUE} if all elements of a column
 #'   are identical.
 #' @noRd
-adeba_find_constants <- function(x) {
-    .Call(adeba_adeba_find_constants, x)
+find_constants <- function(x) {
+    .Call(adeba_find_constants, x)
 }
 
 #' Check if a vector contains only one unique value
@@ -17,8 +17,8 @@ adeba_find_constants <- function(x) {
 #' @return A logical that is \code{TRUE} if all elements were identical,
 #'   otherwise \code{FALSE}.
 #' @noRd
-adeba_is_constant <- function(x) {
-    .Call(adeba_adeba_is_constant, x)
+is_constant <- function(x) {
+    .Call(adeba_is_constant, x)
 }
 
 #' Calculate bandwithds from parameters

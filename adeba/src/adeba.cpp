@@ -9,7 +9,7 @@ using namespace Rcpp;
 //'   are identical.
 //' @noRd
 // [[Rcpp::export]]
-LogicalVector adeba_find_constants(NumericMatrix x) {
+LogicalVector find_constants(NumericMatrix x) {
     int i;
     int n = x.nrow();
     int p = x.ncol();
@@ -29,7 +29,7 @@ LogicalVector adeba_find_constants(NumericMatrix x) {
 //'   otherwise \code{FALSE}.
 //' @noRd
 // [[Rcpp::export]]
-LogicalVector adeba_is_constant(NumericVector x) {
+LogicalVector is_constant(NumericVector x) {
     for(int i = 1; i < x.size(); i++)
         if(x[i] != x[0]) return false;
     return true;

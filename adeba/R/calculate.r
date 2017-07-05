@@ -59,7 +59,7 @@ make.adeba <- function(data, range=c(Inf, Inf), alpha=NULL, beta=0.5, pilot,
     }
 
     # Find variables with no variation
-    constant <- adeba_find_constants(data)
+    constant <- find_constants(data)
     if(all(constant)){
         stop("The dataset does not contain any variation.")
     } else if(any(constant)){
@@ -138,7 +138,7 @@ make.adeba <- function(data, range=c(Inf, Inf), alpha=NULL, beta=0.5, pilot,
 iterate <- function(object, ...){
     if(object$iterations > 0)
         object$pilot <- predict(object) # Update pilot
-    if(adeba_is_constant(object$pilot)){
+    if(is_constant(object$pilot)){
         parameters <- list(get_posterior(object, alpha=object$alpha, beta=0, ...))
     } else {
         parameters <- lapply(object$beta, function(b){
