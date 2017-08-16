@@ -19,6 +19,13 @@ method_labels <- list(
   DEBA="DEBA", `ADEBA-a`=expression("ADEBA-"*alpha), `ADEBA*`="ADEBA*",
   GMM2="GMM2", GMM3="GMM3", GMM5="GMM5", GMM8="GMM8"
 )
+method_linetypes <- c(
+  Truth="solid",
+  DEBA="solid", `ADEBA-1`="twodash", `ADEBA-a`="twodash", `ADEBA*`="twodash",
+  `BMA-SRL`="81", `RoT-SRL`="dashed",
+  SJ = "dashed", Liao = "81",
+  GMM2="81", GMM3="61", GMM5="41", GMM8="21"
+)
 
 text_colour <- "grey50"
 theme_set(

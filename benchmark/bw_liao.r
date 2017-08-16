@@ -69,7 +69,7 @@ g4.initial <- cmpfun(function(x) {
 
     z <- .Call(stats:::C_bw_den, nb, x)
     d <- z[[1L]]      #needed for the faster functions
-    cnt <- as.integer(z[[2L]])  #this will be a r
+    cnt <- z[[2L]]    #this will be a r
 
     scale <- min(sd(x), IQR(x)/1.349)
     a <- 1.24 * scale * n^(-1/7)
