@@ -11,8 +11,8 @@
 #' @aliases log_prior
 #' @rdname log_prior
 #' @references A demo explaining how \code{empirical_gaussian_log_prior} was
-#'   implemented can be found at
-#'   \url{http://github.com/backlin/adeba/prior-comparison/empirical_gaussian_demo.Rmd}.
+#'   implemented can be found in
+#'   \href{https://github.com/backlin/adeba/blob/master/prior-comparison/empirical_gaussian_demo.Rmd}{this Rmarkdown notebook}.
 #' @export
 uniform_log_prior <- function(parameters){
     rep(0, nrow(parameters))

@@ -7,8 +7,6 @@ library(treesmapstheorems)
 source("../benchmark/plot_functions.r")
 source("comparison.R")
 
-load("comparison.Rdata")
-
 prior_labels <- list(
   simpleuniform = expression(alpha~"constant"),
   simplejeffreys = expression(alpha~"Jeffreys"),
@@ -66,12 +64,12 @@ if(any(na_count$n > 1) || any(na_count$prior != "empiricalgaussian")){
 mean_ise <- plot_data %>%
   gather_("prior", "ISE", priors) %>%
   group_by(distribution, sample_size, prior) %>%
-  summarise(mean_ise = mean(ISE), sd_ise = sd(ISE)) %>%
+  summarise(mean_ise = mean(ISE, na.rm=TRUE), sd_ise = sd(ISE, na.rm=TRUE)) %>%
   ungroup %>%
   factorize
 
 yb <- outer(1:9, 10^(-2:2), "*") 
-top_row <- mean_ise %>%
+p1 <- mean_ise %>%
   ggplot(aes(x = sample_size, y = mean_ise, colour = prior, linetype = prior)) +
     facet_wrap(~distribution) +
     geom_line() +
@@ -99,7 +97,7 @@ top_row <- mean_ise %>%
     theme(legend.key.width = unit(6, "mm"))
 
 dir.create("plot", showWarnings = FALSE)
-my_save("plot/comparison_mean_ise.pdf", top_row, 13, 4)
+my_save("plot/comparison_mean_ise.pdf", p1, 13, 4)
 
 
 #----------------------------------------------------[ Head to head comparsion ]
@@ -113,9 +111,9 @@ head2head <- plot_data %>%
   gather_("prior", "log_rel_ise", priors[c(2,4)]) %>%
   group_by(distribution, sample_size, prior) %>%
   summarise(
-    y = mean(log_rel_ise),
-    ymin = mean(log_rel_ise) - sd(log_rel_ise),
-    ymax = mean(log_rel_ise) + sd(log_rel_ise)
+    y = mean(log_rel_ise, na.rm=TRUE),
+    ymin = mean(log_rel_ise, na.rm=TRUE) - sd(log_rel_ise, na.rm=TRUE),
+    ymax = mean(log_rel_ise, na.rm=TRUE) + sd(log_rel_ise, na.rm=TRUE)
   ) %>%
   ungroup %>%
   factorize

@@ -27,8 +27,8 @@ Functions designed to be plugged in as \code{log_prior} to \code{\link{make.adeb
 }
 \references{
 A demo explaining how \code{empirical_gaussian_log_prior} was
-  implemented can be found at
-  \url{http://github.com/backlin/adeba/prior-comparison/empirical_gaussian_demo.Rmd}.
+  implemented can be found in
+  \href{https://github.com/backlin/adeba/blob/master/prior-comparison/empirical_gaussian_demo.Rmd}{this Rmarkdown notebook}.
 }
 \author{
 Christofer \enc{Bäcklin}{Backlin}
