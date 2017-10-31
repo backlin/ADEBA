@@ -1,0 +1,91 @@
+---
+title: "Demo on how the empirical Gaussian prior was implemented"
+output:
+  html_document:
+    df_print: paged
+---
+
+Assume that the log-$\alpha$-modified posterior follows a normal distribution
+$p(\log(\alpha),\beta|D) \sim \mathcal{N}(\mu,\Sigma)$.
+Assume an unknown true $\mu$, $\Sigma$ as:
+
+```{r}
+log_theta <- c("log_alpha", "beta")
+theta     <- c("alpha", "beta")
+resolution <- c(alpha=20, beta=20)
+n_sample <- 200
+
+(mu <- c(log_alpha=1, beta=2))
+(sigma <- matrix(c(1, -.8, -.8, 1), 2, dimnames=list(log_theta, log_theta)))
+```
+
+Sample from it to get a sense of its shape:
+
+```{r, echo=FALSE}
+suppressMessages(library(mixtools))
+```
+
+```{r}
+x <- rmvnorm(n_sample, mu, sigma)
+colnames(x) <- log_theta
+plot(x, xlim=mu["log_alpha"] + c(-4, 4), ylim=mu["beta"] + c(-4, 4), asp=TRUE)
+```
+
+Create a parameter grid similar to that created by ADEBA.
+Note that the grid is _linear_ over $\alpha$ since a logarithmically spaced grid
+would mess up the Bayesian model averaging.
+
+```{r}
+parts <- lapply(mu["beta"] + seq(-3.5, 3.5, length.out = resolution["beta"]), function(beta){
+  m <- mu["log_alpha"] - (beta - mu["beta"]) + .3*rnorm(1)
+  log_r <- 4 + .3*rnorm(1)
+  
+  data.frame(
+    #alpha.range = unname( exp(m+log_r/2) - exp(m-log_r/2) ),
+    alpha       = seq(exp(m-log_r/2), exp(m+log_r/2), length.out = resolution["alpha"]),
+    beta        = beta
+  )
+})
+param <- do.call(rbind, parts)
+#param
+```
+
+Overlay grid on the data to see that it looks sensible:
+
+```{r}
+par(mfrow=1:2, mar=c(3, 3, .4, .4), mgp=c(1.8, .5, 0))
+
+plot(x, xlim=mu["log_alpha"] + c(-4, 4), ylim=mu["beta"] + c(-4, 4))
+points(log(param$alpha), param$beta, col="red", pch=20, cex=.5)
+
+plot(exp(x[,1]), x[,2],
+     xlim=exp(mu["log_alpha"] + c(-4, 4)),
+     ylim=mu["beta"] + c(-4, 4),
+     xlab="alpha", ylab="beta")
+points(param[,theta], col="red", pch=20, cex=.5)
+```
+
+Estimate $\hat{\mu}$, $\hat{\Sigma}$ from the data.
+
+```{r, echo=FALSE}
+suppressMessages(library(dplyr))
+```
+
+```{r}
+px <- cbind(
+  log_alpha = log(param$alpha),
+  beta      = param$beta
+)
+param$likelihood <- dmvnorm(px, mu = mu, sigma = sigma)
+
+weights <- with(
+  merge(
+    param,
+    aggregate(alpha ~ beta, param, function(x) sum(1/x)),
+    by="beta"
+  ),
+  likelihood / (alpha.x * alpha.y)
+)
+
+cov.wt(px, wt=weights)[c("cov", "center")]
+```

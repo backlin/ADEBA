@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // find_constants
 LogicalVector find_constants(NumericMatrix x);
-RcppExport SEXP adeba_find_constants(SEXP xSEXP) {
+RcppExport SEXP _adeba_find_constants(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -18,7 +18,7 @@ END_RCPP
 }
 // is_constant
 LogicalVector is_constant(NumericVector x);
-RcppExport SEXP adeba_is_constant(SEXP xSEXP) {
+RcppExport SEXP _adeba_is_constant(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,7 +29,7 @@ END_RCPP
 }
 // get_bandwidths
 NumericMatrix get_bandwidths(NumericVector pilot, NumericVector alpha, NumericVector beta);
-RcppExport SEXP adeba_get_bandwidths(SEXP pilotSEXP, SEXP alphaSEXP, SEXP betaSEXP) {
+RcppExport SEXP _adeba_get_bandwidths(SEXP pilotSEXP, SEXP alphaSEXP, SEXP betaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

@@ -1,7 +1,7 @@
 emphasise_min <- function(x){
   ifelse(x == min(x, na.rm=TRUE),
-         sprintf("\\textbf{%.4f}", x),
-         sprintf("%.4f", x))
+         sprintf("\\textbf{%.3f}", x),
+         sprintf("%.3f", x))
 }
 
 make_table <- function(df, position="p", caption){
@@ -42,7 +42,7 @@ prepare_table <- function(df){
     spread(Method, m_s) %>%
     ungroup %>%
     mutate(
-      Distribution = sprintf("\\%s", Distribution),
+      Distribution = sprintf("%s", Distribution),
       Distribution = ifelse(Distribution == lag(Distribution, 1, ""), "", Distribution)
     )
 }

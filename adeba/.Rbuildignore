@@ -1,6 +1,5 @@
 examples
 images
-pack.R
 .tar.gz
 .sh
-render_manual.R
+compile_package.R

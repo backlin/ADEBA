@@ -21,12 +21,20 @@ NULL
 #' @param na.rm Whether to remove observations with missing values (\code{TRUE})
 #'   or throw an error (\code{FALSE}).
 #' @param parallel See \code{\link{adeba}}.
+#' @param log_prior A function that calculates a log prior from a data frame
+#'   with parameters. See \code{\link{log_prior}} for options and details.
+#'
+#'   \emph{NOTE:}\cr
+#'   Unless you know ADEBAs internals well you should probably not
+#'   touch this argument. It was only exposed to facilitate analyses on the
+#'   prior's importance, or rather lack of it, which were added as a supplement
+#'   to the original publication.
 #' @return An unfitted density estimate that it to be passed to
 #'   \code{\link{iterate}}.
 #'   The estimate consist of the following components:
 #'   \describe{
 #'     \item{\code{iterations}}{Number of iterations calculated.}
-#'     \item{\code{paramaters}}{All the parameters and posterior values.}
+#'     \item{\code{parameters}}{All the parameters and posterior values.}
 #'     \item{\code{bandwidths}}{Bandwidths corresponding to the parameters.
 #'       These are pre-calculated to make the results easier for the user to
 #'       digest and manipulate, and since are often needed multiple times.}
@@ -45,7 +53,7 @@ NULL
 #' @importFrom stats predict complete.cases prcomp dist
 #' @export
 make.adeba <- function(data, range=c(Inf, Inf), alpha=NULL, beta=0.5, pilot,
-                       transform=TRUE, na.rm=FALSE, parallel=FALSE){
+                       transform=TRUE, na.rm=FALSE, parallel=FALSE, log_prior=uniform_log_prior){
     # Check data set
     stopifnot(is.numeric(data))
     if(!is.matrix(data)) data <- as.matrix(data)
@@ -115,7 +123,8 @@ make.adeba <- function(data, range=c(Inf, Inf), alpha=NULL, beta=0.5, pilot,
         pilot = if(missing(pilot)) rep(1, nrow(data)) else pilot,
         parameters = NULL,
         bandwidths = NULL,
-        parallel = parallel
+        parallel = parallel,
+        log_prior = log_prior
     ))
 }
 
@@ -131,7 +140,7 @@ make.adeba <- function(data, range=c(Inf, Inf), alpha=NULL, beta=0.5, pilot,
 #' estimate.
 #' 
 #' @param object Density estimate.
-#' @param ... Sent to the internal function \code{get_posterior}.
+#' @param ... Sent to the internal function \code{get_log_likelihood}.
 #' @return An ADEBA estimate with increased number of iterations.
 #' @author Christofer \enc{Bäcklin}{Backlin}
 #' @export
@@ -139,13 +148,13 @@ iterate <- function(object, ...){
     if(object$iterations > 0)
         object$pilot <- predict(object) # Update pilot
     if(is_constant(object$pilot)){
-        parameters <- list(get_posterior(object, alpha=object$alpha, beta=0, ...))
+        parameters <- list(get_log_likelihood(object, alpha=object$alpha, beta=0, ...))
     } else {
         parameters <- lapply(object$beta, function(b){
-            get_posterior(object, alpha=object$alpha, beta=b, ...)
+            get_log_likelihood(object, alpha=object$alpha, beta=b, ...)
         })
     }
-    object$parameters <- normalize_posterior(parameters)
+    object$parameters <- normalize_posterior(parameters, object$log_prior)
     if(nrow(object$parameters) == 1){
         object$bandwidths <- with(object, data.frame(X1 = parameters$alpha/pilot^parameters$beta))
     } else {
@@ -157,34 +166,42 @@ iterate <- function(object, ...){
     object
 }
 
-#' Get posterior given beta
+#' Get likelihood given beta
 #' 
 #' Given a value of the beta parameter this function will first identify a
-#' suitable range for the alpha parameter by calculating the posterior over a
+#' suitable range for the alpha parameter by calculating the likelihood over a
 #' logarithmically distributed rough grid.
-#' The range in which the posteriour is not very small will be selected,
-#' and the posterior will be recalculated over a finer linear grid.
+#' The range in which the likelihood is not very small will be selected,
+#' and the likelihood will be recalculated over a finer linear grid.
 #' 
 #' @param object Adeba estimate containing a pilot.
+#' @param alpha Range of alpha values to use. If missing grid search will be
+#'   performed (controlled with the \code{rough} and \code{fine} arguments).
 #' @param beta Beta value to use.
 #' @param rough Rough search grid resolution.
 #' @param fine Fine search grid resolution.
-#' @return A data frame with values for alpha, beta, and the log posterior.
+#' @return A data frame with values for alpha, beta, and the log likelihood
 #' @author Christofer \enc{Bäcklin}{Backlin}
 #' @importFrom stats dnorm
 #' @noRd
-get_posterior <- function(object, alpha, beta=0.5, rough=11, fine=41){
+get_log_likelihood <- function(object, alpha, beta=0.5, rough=11, fine=41){
     k <- dimension(object)
     stopifnot(length(beta) == 1)
 
-    # Run posterior calculation in parallel if possible
+    # Run likelihood calculation in parallel if possible
     my.sapply <- if(object$parallel){
         function(...) unlist(parallel::mclapply(...))
     } else {
         sapply
     }
 
-    log.posterior <- function(bandw){
+    # Calculate log likelihood probabilities
+    #
+    # @param bandw A data frame of bandwidths where the rows represent
+    #   observations in the data set and the columns represent different hyper
+    #   parameter choices.
+    # @return A vector of likelihood, one value for each column in \code{bandw}.
+    log.likelihood <- function(bandw){
         my.sapply(bandw, function(bw){
             kd <- dnorm(object$distance, sd=bw)/((2*pi)^((k-1)/2)*bw^(k-1))
             diag(kd) <- NA
@@ -198,8 +215,8 @@ get_posterior <- function(object, alpha, beta=0.5, rough=11, fine=41){
         for(r in 1:2){
             alpha <- 10^seq(log.range[1], log.range[2], length.out=rough)
             bandwidths <- data.frame((1/object$pilot^beta) %*% t(alpha))
-            posterior <- log.posterior(bandwidths)
-            i <- range(which(posterior >= max(posterior)-3))
+            likelihood <- log.likelihood(bandwidths)
+            i <- range(which(likelihood >= max(likelihood)-3))
             if(any(c(1, rough) %in% i))
                 warning("Rough alpha range not large enough.")
             log.range <- log10(alpha)[c(max(1, i[1]-1), min(rough, i[2]+1))]
@@ -211,24 +228,24 @@ get_posterior <- function(object, alpha, beta=0.5, rough=11, fine=41){
     bandwidths <- data.frame((1/object$pilot^beta) %*% t(alpha))
     data.frame(alpha = alpha,
                beta = beta,
-               log.posterior = log.posterior(bandwidths))
+               log.likelihood = log.likelihood(bandwidths))
 }
 
 #' Normalize posteriors obtained for different beta
 #'
 #' This function adjusts the posterior values returned from
-#' \code{get_posterior} based on how densely the alpha values were
+#' \code{get_log_likelihood} based on how densely the alpha values were
 #' sampled for each beta value. 
 #' This must be done in order for the integral approximation to work,
 #' otherwise small beta will be given far too much influence.
 #'
-#' @param parameters List of parameter and posterior estimates as returned by
-#'   \code{get_posterior}.
+#' @param parameters List of parameter and likelihood estimates as returned by
+#'   \code{get_log_likelihood}.
 #' @param A single merged data frame containing all parameters and posteriors
 #'   for all tested values of alpha and beta.
 #' @author Christofer \enc{Bäcklin}{Backlin}
 #' @noRd
-normalize_posterior <- function(parameters){
+normalize_posterior <- function(parameters, log_prior=uniform_log_prior){
     beta <- sapply(parameters, function(x) x$beta[1])
     if(length(beta) > 2){
         local({
@@ -237,6 +254,8 @@ normalize_posterior <- function(parameters){
                 stop("The beta values are not linearly distributed.")
         })
     }
+
+    # Multiply the likelihood with this factor to compensate for the density of the alpha values.
     alpha.range <- sapply(parameters, function(x) diff(range(x$alpha)))
     if(all(alpha.range == 0)){
         # Effectively remove the alpha range from the calculation
@@ -245,13 +264,21 @@ normalize_posterior <- function(parameters){
         # This shouldn't ever happen, but just to be safe
         stop("Cannot normalize posterior since some beta values have only a single alpha value.")
     }
-    shift <- max(sapply(parameters, function(x) max(x$log.posterior)))
-    parameters <- do.call(rbind, Map(function(p, w){
-        p$posterior <- exp(p$log.posterior - shift + w)
-        p$log.posterior <- NULL
+
+    parameters <- do.call(rbind, Map(function(p, ar){
+        p$alpha.range <- ar
         p
-    }, parameters, log(alpha.range)))
-    parameters$posterior <- parameters$posterior/sum(parameters$posterior)
+    }, parameters, alpha.range))
+
+    parameters$log.prior <- log_prior(parameters)
+
+    # Multiply the likelihood with this factor to not fall beneth computational precision.
+    # This is typically a large negative value.
+    shift <- max(parameters$log.likelihood)
+
+    posterior <- with(parameters,
+        exp(log.likelihood - shift + alpha.range + log.prior))
+    parameters$posterior <- posterior/sum(posterior)
     parameters
 }
 

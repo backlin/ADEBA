@@ -9,7 +9,7 @@ iterate(object, ...)
 \arguments{
 \item{object}{Density estimate.}
 
-\item{...}{Sent to the internal function \code{get_posterior}.}
+\item{...}{Sent to the internal function \code{get_log_likelihood}.}
 }
 \value{
 An ADEBA estimate with increased number of iterations.

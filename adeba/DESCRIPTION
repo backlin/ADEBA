@@ -2,8 +2,8 @@ Encoding: UTF-8
 Package: adeba
 Type: Package
 Title: Adaptive Density Estimation by Bayesian Averaging
-Version: 1.0.3
-Date: 2017-07-05
+Version: 1.1.1
+Date: 2017-10-31
 Author: Christofer Backlin, Mats Gustafsson
 Maintainer: Christofer Backlin <adeba@christofer.backlin.se>
 Description: Univariate and multivariate non-parametric kernel density
@@ -11,6 +11,7 @@ Description: Univariate and multivariate non-parametric kernel density
     square root law.
 Imports:
     graphics,
+    mixtools,
     pdist,
     Rcpp (>= 0.11.6),
     stats

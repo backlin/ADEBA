@@ -92,6 +92,9 @@ ddist <- function(d, x){
     if(is.null(dimx)) f else array(f, dimx)
 }
 rdist <- function(d, n, replicates=1){
+    if("package:data.table" %in% search()){
+        stop("Please load the data.table package to sample from distributions")
+    }
     dims <- intersect(c("x", "y", "z"), names(d))
     i <- sample(nrow(d), replicates*n, replace=TRUE, prob=d$w)
     aperm(perm=c(2,3,1), array(

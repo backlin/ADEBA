@@ -1,3 +1,5 @@
+library(extrafont)
+
 # https://coolors.co/app/3a3a39-d14d4b-ffb942-258fbc-70c1b3
 # https://coolors.co/app/3a3a39-258fbc-873496-e866ab-ffb942
 # https://coolors.co/70c1b3-fbc45d-ff6446-a21b1b-3a3a39

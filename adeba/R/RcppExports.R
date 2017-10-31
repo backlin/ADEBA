@@ -8,7 +8,7 @@
 #'   are identical.
 #' @noRd
 find_constants <- function(x) {
-    .Call(adeba_find_constants, x)
+    .Call(`_adeba_find_constants`, x)
 }
 
 #' Check if a vector contains only one unique value
@@ -18,7 +18,7 @@ find_constants <- function(x) {
 #'   otherwise \code{FALSE}.
 #' @noRd
 is_constant <- function(x) {
-    .Call(adeba_is_constant, x)
+    .Call(`_adeba_is_constant`, x)
 }
 
 #' Calculate bandwithds from parameters
@@ -30,6 +30,6 @@ is_constant <- function(x) {
 #' @author Christofer \enc{Bäcklin}{Backlin}
 #' @noRd
 get_bandwidths <- function(pilot, alpha, beta) {
-    .Call(adeba_get_bandwidths, pilot, alpha, beta)
+    .Call(`_adeba_get_bandwidths`, pilot, alpha, beta)
 }
 

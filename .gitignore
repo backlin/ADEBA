@@ -1,6 +1,7 @@
 *.o
 *.so
 *.pdf
+*.html
 *.Rdata
 *.RData
 *.tar.gz

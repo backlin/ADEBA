@@ -33,9 +33,9 @@ test_that("Posterior calculation", {
                  distance = as.matrix(dist(x)),
                  parallel = FALSE,
                  pilot = rep(1, 20))
-    parameters <- get_posterior(obj2, beta=0)
+    parameters <- get_log_likelihood(obj2, beta=0)
     expect_is(parameters, "data.frame")
-    expect_true(all(c("alpha", "beta", "log.posterior") %in% names(parameters)))
+    expect_true(all(c("alpha", "beta", "log.likelihood") %in% names(parameters)))
 
     parameters <- normalize_posterior(list(parameters))
     expect_equal(sum(parameters$posterior), 1, tolerance=1e-3)
