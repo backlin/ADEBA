@@ -1,18 +1,16 @@
 citHeader("To cite package ‘adeba’ in publications use:")
 
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
-vers <- paste("R package version", meta$Version)
-
-citEntry(entry = "Manual",
-         title = "Adaptive density estimation by Bayesian Averaging",
-         author = personList(as.person("Christofer L Bäcklin"),
-                             as.person("Mats G Gustafsson")),
-         year = year,
-         note = vers,
-
-         textVersion =
-         paste0("Christofer L Bäcklin, Mats G Gustafsson (",
-                year,
-                "). Adaptive density estimation by Bayesian Averaging. ",
-                vers, "."))
-
+bibentry(
+  bibtype = "Article",
+  title = "Self-tuning density estimation based on Bayesian averaging of adaptive kernel density estimations yields state-of-the-art performance",
+  journal = "Pattern Recognition",
+  volume = "78",
+  pages = "133-143",
+  year = 2018,
+  author = personList(as.person("Christofer L Bäcklin"),
+             as.person("Claes Andersson"),
+             as.person("Mats G Gustafsson")),
+  textVersion = "Bäcklin et al. (2018) Self-tuning density estimation based on
+    Bayesian averaging of adaptive kernel density estimations yields
+    state-of-the-art performance. Pattern Recognition. 78:133-143."
+)

@@ -3,26 +3,31 @@ Adaptive density estimation by Bayesian averaging
 This repo contains an R implementation of the ADEBA density estimation method
 and a benchmark study comparing it to a number of other methods.
 
-More details on ADEBA and a reference to the original article will be posted here
-once it has been accepted by a scientific journal (under review at the moment).
+[Original publication here](https://www.sciencedirect.com/science/article/pii/S0031320318300062).
+Notice that the link only access a preview of the paper,
+wihch is accepted for publication in June 2018
+(Pattern Recognition Volume 78, June 2018, Pages 133-143, Pages 133-143).
 
 
 ## Installation
 Latest release version:
 
 ```
-R> install.packages("CRAN")
+R> install.packages("adeba")
 ```
 
 Latest dev version (currently the same):
 
 ```
-library(devtools)
-install_github("backlin/ADEBA/adeba")
+devtools::install_github("backlin/adeba/adeba")
 ```
 
-Some extra plot functionality is provided in the support package [`adebaExtra`](./adebaExtra).
+Some extra plot functionality is provided in the support package
+[`adebaExtra`](./adebaExtra) (not on CRAN).
 
+```
+devtools::install_github("backlin/adeba/adebaExtra")
+```
 
 ## Key features
 The ADEBA family of estimators has two features that differentiates it from traditional
