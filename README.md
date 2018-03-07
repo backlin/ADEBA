@@ -5,8 +5,7 @@ and a benchmark study comparing it to a number of other methods.
 
 [Original publication here](https://www.sciencedirect.com/science/article/pii/S0031320318300062).
 Notice that the link only access a preview of the paper,
-wihch is accepted for publication in June 2018
-(Pattern Recognition Volume 78, June 2018, Pages 133-143, Pages 133-143).
+which is accepted for publication in Pattern Recognition, Volume 78, June 2018, Pages 133-143.
 
 
 ## Installation
